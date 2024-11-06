@@ -15,7 +15,7 @@ const CountriesList: React.FC<CountriesListProps> = ({ filteredCountries, dataFl
     return (
         <>
           {filteredCountries?.map((country, index) => {
-            // Filtrar el flag correspondiente al countryCode de la frontera
+            // Filter the flag by the countryCode
             const borderFlag = dataFlags?.data.find(flag => flag.iso2 === country.countryCode);
     
             return (
@@ -23,12 +23,10 @@ const CountriesList: React.FC<CountriesListProps> = ({ filteredCountries, dataFl
                 <List key={index}>
                   <ListItem>
                     <ListItemAvatar>
-                      {/* Mostrar el flag correspondiente si lo encontramos */}
                       {borderFlag ? (
                           <Image src={borderFlag.flag} alt={`Flag of ${country.name}`} width={40} height={20} />
                       ) : (
                           <Image src={ImageNotFound} alt="No flag" width={40} height={20} />
-                        
                       )}
                     </ListItemAvatar>
                     <ListItemText
@@ -41,7 +39,5 @@ const CountriesList: React.FC<CountriesListProps> = ({ filteredCountries, dataFl
           })}
         </>
       );
-  
 }
-
 export default CountriesList

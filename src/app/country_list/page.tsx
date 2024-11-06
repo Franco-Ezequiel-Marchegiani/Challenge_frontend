@@ -9,10 +9,10 @@ import { useEffect, useState } from "react";
 
 
 const CountryList = () => {
-  const [countryCode, setCountryCode] = useState<Country[]>([]);  // Estado local para los países
+  const [countryCode, setCountryCode] = useState<Country[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
   const [searchTerm, setSearchTerm] = useState<string>('');
-  const [dataFlags, SetDataFlags] = useState<Flags | null>(null);  // Estado local para los países
+  const [dataFlags, SetDataFlags] = useState<Flags | null>(null);
 
 
   useEffect(() => {
@@ -23,7 +23,6 @@ const CountryList = () => {
         const responseFlags = await authApi.getContriesFlags();
 
         SetDataFlags(responseFlags)
-        console.log(countries);
         
         if (Array.isArray(countries)) {
           setCountryCode(countries); 
@@ -36,13 +35,12 @@ const CountryList = () => {
       }
     };
 
-    fetchCountries(); // Ejecuta la llamada cuando el componente se monta
+    fetchCountries();
   }, []); 
-  console.log(loading);
   
-  
+  //Filter the list by the user's search
   const filteredCountries = countryCode.filter(country => 
-    country.name.toLowerCase().includes(searchTerm.toLowerCase()) // Filtra por el nombre
+    country.name.toLowerCase().includes(searchTerm.toLowerCase())
   );
  
   return (
@@ -58,7 +56,7 @@ const CountryList = () => {
                       variant="outlined"
                       fullWidth
                       value={searchTerm}
-                      onChange={(e) => setSearchTerm(e.target.value)} // Actualiza el estado al escribir
+                      onChange={(e) => setSearchTerm(e.target.value)} // Update the state any time the user type
                       style={{ marginBottom: '20px' }}
                     />
                 </div>
@@ -85,14 +83,8 @@ const CountryList = () => {
                   <CircularProgress />
               </main>            
             }
-            
-            
-            
       </main>
-      
     </div>
   );
 }
-
-
 export default CountryList;

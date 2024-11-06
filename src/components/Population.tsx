@@ -5,63 +5,74 @@ import InfiniteScroll from 'react-infinite-scroll-component';
 
 type PopulationProps ={
   dataPopulation: PopulationTypes | null,
+  nameCountry: string,
 }
-const Population: React.FC<PopulationProps> = ({ dataPopulation }) => {
+const Population: React.FC<PopulationProps> = ({ dataPopulation, nameCountry }) => {
     const [items, setItems] = useState<PopulationData[]>([]); 
     const [hasMore, setHasMore] = useState(true); 
-    useEffect(() => {
-      if (dataPopulation?.data) {
-        setItems(dataPopulation?.data.slice(0, 3)); 
-      }
-      }, [dataPopulation]);
 
-    // Función para cargar más elementos
-    const loadMoreData = () => {
-      const nextItems = dataPopulation?.data.slice(items.length, items.length + 3); // Obtén 10 elementos más
-      if (nextItems && nextItems.length > 0) {
-        setItems(prevItems => [...prevItems, ...nextItems]); // Agrega los nuevos elementos
-      } else {
-        setHasMore(false); // No hay más elementos por cargar
-      }
+    const filterData = () => {
+      if (!dataPopulation?.data) return [];
+      
+      return dataPopulation?.data.filter(country => 
+        country.city.toLowerCase().includes(nameCountry.toLowerCase()) || 
+        country.country.toLowerCase().includes(nameCountry.toLowerCase())
+      );
     };
 
-    console.log("LARGO ACTUAL: ", items.length);
-    
+    useEffect(() => {
+      const filteredData = filterData();
+      if (filteredData.length !== items.length) {
+        setItems(filteredData.slice(0, 3));
+      }
+    }, [dataPopulation, nameCountry]);
+
+
+    // Function to load more dat
+    const loadMoreData = () => {
+      const filteredData = filterData();
+      const nextItems = filteredData.slice(items.length, items.length + 3); // Load 3 new Charts
+
+      if (nextItems.length > 0) {
+        setItems(prevItems => [...prevItems, ...nextItems]); // Add the new elements
+      } else {
+        setHasMore(false); // There are no more elements
+      }
+    };
     return (
         <>  
           <InfiniteScroll
-            dataLength={items.length} // Número de elementos actuales
-            next={loadMoreData}       // Función que se ejecuta para cargar más elementos
-            hasMore={hasMore}         // Si hay más elementos
-            loader={<h4>Loading...</h4>} // Lo que se muestra mientras cargan más elementos
-            endMessage={<p>No more items</p>} // Mensaje cuando no hay más datos
+            dataLength={items.length}
+            next={loadMoreData}
+            hasMore={hasMore}
+            loader={<h4>Loading...</h4>}
+            endMessage={<p>No more items</p>}
           >
 
             {items.map((country, index) => {
-              // Extraemos los años para el xAxis
+              //Extract the years and Population values
               const years = country.populationCounts.map(item => item.year);
-
-              // Extraemos los valores para las series
-              const populationValues = country.populationCounts.map(item => parseFloat(item.value)); // Convertimos a número para trabajar con valores numéricos
+              const populationValues = country.populationCounts.map(item => parseFloat(item.value));
 
               return (
                   <BarChart
                       key={index}
                       series={[
-                          { data: populationValues }, // Usamos los valores de población
+                          { data: populationValues,
+                            label: country.city
+                           },
                       ]}
                       height={290}
+                      sx={{paddingLeft: '16px', pointerEvents: 'none',}}
                       xAxis={[
-                          { data: years, scaleType: 'band' }, // Usamos los años para el eje X
+                          { data: years, scaleType: 'band' }, // Use the years for eje X
                       ]}
-                      margin={{ top: 10, bottom: 30, left: 40, right: 10 }}
+                      margin={{ top: 40, bottom: 40, left: 40, right: 10 }}
                   />
               );
             })}
             </InfiniteScroll>
         </>
       );
-  
 }
-
 export default Population

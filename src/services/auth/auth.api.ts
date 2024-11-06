@@ -10,7 +10,5 @@ class AuthAPI {
     getContriesFlags = async(): Promise<Flags> => httpGet(`/countries/flags`)
     getContriesPopulation = async(): Promise<PopulationTypes> => httpGet(`/countries/population`)
 }
-
 const authApi = new AuthAPI();
-
 export default authApi;

@@ -1,6 +1,5 @@
 const httpGet = async (endpointSuffix:string, params?: URLSearchParams, accessToken?: string) =>{
     try {
-        //const res = await fetch(`${process.env.MAIN_ROUTE}${endpointSuffix}${params ? `${params}` : '' }`,{
         const res = await fetch(`http://localhost:5056${endpointSuffix}${params ? `${params}` : '' }`,{
             headers: !accessToken ?{'Content-Type': 'application/json'} : {
                 'Content-Type': 'application/json',

@@ -1,9 +1,11 @@
 import { CountryInfo } from '@/types/country_info.types'
 import { Flags } from '@/types/flags.types'
-import { Avatar, List, ListItem, ListItemAvatar, ListItemText } from '@mui/material'
+import { List, ListItem, ListItemAvatar, ListItemText } from '@mui/material'
 import Image from 'next/image'
 import Link from 'next/link'
 import React from 'react'
+import ImageNotFound from '../../public/notFound.png'
+
 type BorderListProps ={
     infoCountry: CountryInfo | null,
     dataFlags: Flags | null
@@ -13,7 +15,7 @@ const BorderList: React.FC<BorderListProps> = ({ infoCountry, dataFlags }) => {
     return (
         <>
           {infoCountry?.borders?.map((country, index) => {
-            // Filtrar el flag correspondiente al countryCode de la frontera
+            // Filter the flag by the countryCode
             const borderFlag = dataFlags?.data.find(flag => flag.iso2 === country.countryCode);
     
             return (
@@ -21,14 +23,10 @@ const BorderList: React.FC<BorderListProps> = ({ infoCountry, dataFlags }) => {
                 <List key={index}>
                   <ListItem>
                     <ListItemAvatar>
-                      {/* Mostrar el flag correspondiente si lo encontramos */}
                       {borderFlag ? (
                           <Image src={borderFlag.flag} alt={`Flag of ${country.commonName}`} width={40} height={20} />
                       ) : (
-                        <Avatar>
-                          {/* Mostrar una imagen por defecto si no se encuentra el flag */}
-                          <Image src="/default-flag.png" alt="No flag" width={40} height={20} />
-                        </Avatar>
+                        <Image src={ImageNotFound} alt="No flag" width={40} height={20} />
                       )}
                     </ListItemAvatar>
                     <ListItemText
@@ -42,7 +40,5 @@ const BorderList: React.FC<BorderListProps> = ({ infoCountry, dataFlags }) => {
           })}
         </>
       );
-  
 }
-
 export default BorderList
