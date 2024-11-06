@@ -9,7 +9,7 @@ import Image from "next/image";
 import { useParams } from "next/navigation";
 import { useEffect, useState } from "react";
 import Population from "@/components/Population";
-
+import ImageNotFound from '../../../../public/notFound.png'
 
 const CountryList = () => {
     const [infoCountry, setInfoCountry] = useState<CountryInfo | null>(null);  // Estado local para los países
@@ -56,7 +56,7 @@ const CountryList = () => {
         {flag || populationFilter ? 
         <>
             <div className="flex items-center	">
-            <Image className="ml-4" width={80} height={4} src={flag?.flag || ''} alt="Image Flag"/>
+            <Image className="ml-4" width={80} height={4} src={flag?.flag || ImageNotFound} alt="Image Flag"/>
                 <p className="ml-4 mr-4">{infoCountry?.commonName}</p>
             </div>
 
