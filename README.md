@@ -39,9 +39,11 @@ And once this is done, you could see in the browser in the port:
 #### What'll I find in this proyect?
 This code was made by Next.js
 The routes are:
+```bash
 -"/" home
 -"/country_list" Country List
 -"/country_list/:country_code" Country Detail
+```
 
 In the **home**, there is just two buttons to redirect you to "home" or "Country List".
 
