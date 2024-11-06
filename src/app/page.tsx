@@ -10,7 +10,6 @@ export default function Home() {
           <FormLabel id="demo-radio-buttons-group-label">Routes</FormLabel>
             <Link className="w-full" href='/'><Button variant="contained" className="mb-4 w-full">Home</Button></Link>
             <Link className="w-full" href='/country_list'><Button variant="contained" className="mb-4 w-full">Country List</Button></Link>
-            <Link className="w-full" href='/country_info'><Button variant="contained" className="mb-4 w-full">Country Info</Button></Link>
 
 
         </FormControl>

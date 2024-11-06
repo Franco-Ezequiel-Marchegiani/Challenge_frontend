@@ -1,74 +1,73 @@
-import { Avatar, List, ListItem, ListItemAvatar, ListItemText, Typography } from "@mui/material";
-import Image from "next/image";
-import { useState } from "react";
+"use client"
+import authApi from "@/services/auth/auth.api";
+import { Country } from "@/types/country_code.types";
+import { Avatar, CircularProgress, List, ListItem, ListItemAvatar, ListItemText } from "@mui/material";
+import Link from "next/link";
+import { useEffect, useState } from "react";
 
-export default function Home() {
+
+const CountryList = () => {
+  const [countryCode, setCountryCode] = useState<Country[]>([]);  // Estado local para los países
+  const [loading, setLoading] = useState<boolean>(true);
+  useEffect(() => {
+    // Async call to get the data of the countries
+    const fetchCountries = async () => {
+      try {
+        const countries = await authApi.getContriesCode();
+        console.log(countries);
+        
+        if (Array.isArray(countries)) {
+          setCountryCode(countries); 
+          setLoading(false)
+        } else {
+          console.error('Expected an array of countries but got:', countries);
+        }
+      } catch (error) {
+        console.error('Error fetching countries:', error);
+      }
+    };
+
+    fetchCountries(); // Ejecuta la llamada cuando el componente se monta
+  }, []); 
+  console.log(loading);
   
   return (
     <div className="grid grid-rows-[20px_1fr_20px] items-center justify-items-center min-h-screen p-8 pb-20 gap-16 sm:p-20 font-[family-name:var(--font-geist-sans)]">
       <main className="flex flex-col gap-8 row-start-2 items-center sm:items-start">
-      <Typography sx={{ mt: 4, mb: 2 }} variant="h6" component="div">
-            Avatar with text
-          </Typography>
-            <List >
-                <ListItem>
-                  <ListItemAvatar>
-                    <Avatar>
-                    </Avatar>
-                  </ListItemAvatar>
-                  <ListItemText
-                    primary="Single-line item"
-                  />
-                </ListItem>
-            </List>
+
+            
+            {!loading ? 
+              <>
+                {countryCode.map((country, index) =>(
+                  <Link  href={`/country_list/${country.countryCode}`} key={country.countryCode}>
+                      <List key={index}>
+                        <ListItem>
+                          <ListItemAvatar>
+                            <Avatar>
+                            </Avatar>
+                          </ListItemAvatar>
+                          <ListItemText
+                            primary={country.name}
+                            secondary={country.countryCode}
+                            />
+                        </ListItem>
+                      </List>
+                  </Link>
+                ))}
+              </>
+            :
+              <main className="flex flex-col gap-8 row-start-2 items-center sm:items-start">
+                  <CircularProgress />
+              </main>            
+            }
+            
+            
+            
       </main>
-      <footer className="row-start-3 flex gap-6 flex-wrap items-center justify-center">
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/file.svg"
-            alt="File icon"
-            width={16}
-            height={16}
-          />
-          Learn
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/window.svg"
-            alt="Window icon"
-            width={16}
-            height={16}
-          />
-          Examples
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/globe.svg"
-            alt="Globe icon"
-            width={16}
-            height={16}
-          />
-          Go to nextjs.org →
-        </a>
-      </footer>
+      
     </div>
   );
 }
+
+
+export default CountryList;
